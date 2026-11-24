@@ -326,11 +326,11 @@ h1,h2,h3{margin:0}
 .bk-box{position:relative;height:min(76vh,720px);min-height:420px;border-radius:14px;overflow:hidden;background:radial-gradient(520px 420px at 50% 42%,#33415A 0%,#1E2735 62%,#141B27 100%);border:1px solid #101722}
 .bk-scene{position:absolute;inset:0;cursor:grab;touch-action:pan-y;perspective:1300px;perspective-origin:50% 38%;outline-offset:-4px}
 .bk-scene.grab{cursor:grabbing}
-.bk-stage{position:absolute;left:50%;top:50%;width:400px;height:900px;transform-origin:50% 50%;transform-style:preserve-3d}
-.bk-fig{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.bk-stage{-webkit-transform-style:preserve-3d;position:absolute;left:50%;top:50%;width:400px;height:900px;transform-origin:50% 50%;transform-style:preserve-3d}
+.bk-fig{position:absolute;inset:0;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;will-change:transform}
 .mq-wrap,#gar{position:absolute;left:0;right:0;top:40px;height:860px;transform-style:preserve-3d}.gw{position:absolute;inset:0;transform-style:preserve-3d}
 .bk-fig img{position:absolute;display:block;max-width:none;pointer-events:none;user-select:none;-webkit-user-drag:none}
-.bk-fig img{backface-visibility:hidden}
+.bk-fig img{backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .bk-floor{display:none}
 .bk-hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);padding:8px 16px;border-radius:999px;background:rgba(15,21,32,.72);color:#fff;font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;pointer-events:none;transition:opacity .4s}
 .bk-hint.off{opacity:0}
