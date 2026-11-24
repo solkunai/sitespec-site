@@ -211,9 +211,10 @@
       '<div class="ftr-bot"><span>© SITESPEC. All rights reserved. &nbsp;<a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a> · <a href="terms.html">Terms</a></span><span>@sitespecworkwear</span></div></footer>';
 
     var mp = function (t, list) { return '<div class="mp-sec"><b>' + t + '</b>' + list.map(function (l) { return '<a href="' + l[1] + '">' + l[0] + '</a>'; }).join('') + '</div>'; };
-    var catLinks = [['Shop all', 'shop.html'], ['Build your kit', 'build.html']].concat(Object.keys(CATS).map(function (k) { return [CATS[k], 'shop.html?cat=' + k]; }));
+    var catLinks = [['Shop all', 'shop.html']].concat(Object.keys(CATS).map(function (k) { return [CATS[k], 'shop.html?cat=' + k]; }));
     var d = document.createElement('div');
     d.innerHTML = '<div class="ov" id="mov"></div><aside class="mpanel" id="mpanel" aria-label="Menu" aria-hidden="true"><div class="mp-head"><img src="img/sitespec-logo-horizontal-white-transparent.png" alt="SITESPEC"><button class="mp-x" id="mpClose" aria-label="Close menu">&times;</button></div>' +
+      '<div class="mp-feature"><a href="build.html"><i>New</i><b>Build your kit</b><small>Dress the mannequin, spin it, add it all to your cart</small></a></div>' +
       mp('Shop', catLinks) +
       mp('SITESPEC', [['Our story', 'our-story.html'], ['Meet the team', 'team.html'], ['Contact us', 'contact.html'], ['Newsletter', 'newsletter.html']]) +
       mp('Help', [['Delivery', 'delivery.html'], ['Returns', 'returns.html'], ['Size guide', 'size-guide.html'], ['FAQ', 'faq.html']]) +
