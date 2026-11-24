@@ -72,7 +72,8 @@ document.addEventListener('sitespec:ready', function () {
   var items = S.PRODUCTS.filter(function (p) { return G[p.slug]; });
   var worn = {}, tab = 'top', sizes = {}, qs = new URLSearchParams(location.search);
   // Shareable outfits: build.html?wear=polo-hi-vis-orange,joggers-charcoal  (and ?a=90 to start at an angle)
-  (qs.get('wear') || '').split(',').forEach(function (s) { if (G[s] && S.find(s)) worn[G[s].slot] = s; });
+  // Starts dressed (same outfit as the preview) unless a ?wear= list is given
+  (qs.get('wear') !== null ? qs.get('wear') : 'long-sleeve-hi-vis-orange,oilskin-bodywarmer,joggers-hi-vis-orange,bobble-hat-orange,neck-gaiter').split(',').forEach(function (s) { if (G[s] && S.find(s)) worn[G[s].slot] = s; });
 
   // ---- 3D figure ----
   var fig = $('#fig');
