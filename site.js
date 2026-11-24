@@ -196,7 +196,7 @@
       '<button class="icon-btn menu-btn show" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mpanel">' + ICON.menu + '</button>' +
       '<a class="logo" href="index.html" aria-label="SITESPEC home"><img src="img/sitespec-logo-horizontal.png" alt="SITESPEC technical workwear, headliners and PPE liners"></a>' +
       '<nav class="nav" id="mainNav" aria-label="Main">' +
-      nl('Shop all', 'shop.html', 'all') + '<a href="our-story.html">Our story</a><a href="team.html">Meet the team</a><a href="contact.html">Contact us</a><a href="newsletter.html">Newsletter</a><a href="faq.html">FAQ</a></nav>' +
+      nl('Shop all', 'shop.html', 'all') + '<a href="build.html" class="nav-build">Build your kit</a><a href="our-story.html">Our story</a><a href="team.html">Meet the team</a><a href="contact.html">Contact us</a><a href="newsletter.html">Newsletter</a><a href="faq.html">FAQ</a></nav>' +
       '<div class="hdr-actions">' + searchForm('d') +
       '<button class="icon-btn search-btn" id="searchBtn" aria-label="Search" aria-expanded="false">' + ICON.search + '</button>' +
       '<button class="icon-btn show" id="cartBtn" aria-label="Open cart">' + ICON.cart + '<span class="badge" id="badge" hidden>0</span></button>' +
@@ -205,13 +205,13 @@
     var f = $('#site-footer');
     if (f) f.innerHTML =
       '<footer class="ftr"><div class="ftr-top"><div class="ftr-brand"><img src="img/sitespec-logo-horizontal-white-transparent.png" alt="SITESPEC"><p>Technical workwear, headliners &amp; PPE liners. Designed in Scotland.</p></div>' +
-      '<div class="ftr-col"><b>Shop</b><a href="shop.html?cat=liners">PPE liners</a><a href="shop.html?cat=jackets">Jackets &amp; bodywarmers</a><a href="shop.html?cat=tops">Hi-vis tops</a><a href="shop.html?cat=joggers">Joggers</a><a href="shop.html?cat=reflective">Black reflective</a><a href="shop.html?cat=hats">Hats</a></div>' +
+      '<div class="ftr-col"><b>Shop</b><a href="build.html">Build your kit</a><a href="shop.html?cat=liners">PPE liners</a><a href="shop.html?cat=jackets">Jackets &amp; bodywarmers</a><a href="shop.html?cat=tops">Hi-vis tops</a><a href="shop.html?cat=joggers">Joggers</a><a href="shop.html?cat=reflective">Black reflective</a><a href="shop.html?cat=hats">Hats</a></div>' +
       '<div class="ftr-col"><b>Help</b><a href="delivery.html">Delivery</a><a href="returns.html">Returns</a><a href="size-guide.html">Size guide</a><a href="faq.html">FAQ</a><a href="contact.html">Contact</a></div>' +
       '<div class="ftr-col"><b>SITESPEC</b><a href="our-story.html">Our story</a><a href="team.html">Meet the team</a><a href="newsletter.html">Newsletter</a><a href="https://www.instagram.com/sitespecworkwear/" target="_blank" rel="noopener">Instagram</a><a href="terms.html">Terms</a></div></div>' +
       '<div class="ftr-bot"><span>© SITESPEC. All rights reserved. &nbsp;<a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a> · <a href="terms.html">Terms</a></span><span>@sitespecworkwear</span></div></footer>';
 
     var mp = function (t, list) { return '<div class="mp-sec"><b>' + t + '</b>' + list.map(function (l) { return '<a href="' + l[1] + '">' + l[0] + '</a>'; }).join('') + '</div>'; };
-    var catLinks = [['Shop all', 'shop.html']].concat(Object.keys(CATS).map(function (k) { return [CATS[k], 'shop.html?cat=' + k]; }));
+    var catLinks = [['Shop all', 'shop.html'], ['Build your kit', 'build.html']].concat(Object.keys(CATS).map(function (k) { return [CATS[k], 'shop.html?cat=' + k]; }));
     var d = document.createElement('div');
     d.innerHTML = '<div class="ov" id="mov"></div><aside class="mpanel" id="mpanel" aria-label="Menu" aria-hidden="true"><div class="mp-head"><img src="img/sitespec-logo-horizontal-white-transparent.png" alt="SITESPEC"><button class="mp-x" id="mpClose" aria-label="Close menu">&times;</button></div>' +
       mp('Shop', catLinks) +
