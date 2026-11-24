@@ -28,12 +28,12 @@
 </div>
 <div class="bk-ctl" role="group" aria-label="Turn the mannequin">
 <button type="button" data-a="0" class="on">Front</button>
-<button type="button" data-a="90">Side</button>
+<button type="button" data-a="40">3/4</button>
 <button type="button" data-a="180">Back</button>
 <button type="button" id="spinBtn" aria-pressed="false">Auto-spin</button>
 <button type="button" id="clearBtn" class="ghost">Clear all</button>
 </div>
-<p class="bk-note">Back and side views are illustrative. They show the shape of each piece, not the exact rear details.</p>
+<p class="bk-note">Turned views are illustrative. They show the shape of each piece from your product photos, not the exact rear details.</p>
 </div>
 <div class="bk-pick">
 <div class="bk-tabs" id="tabs" role="tablist"></div>
@@ -52,7 +52,7 @@ document.addEventListener('sitespec:ready', function () {
   var SLOTS = { legs: { label: 'Legs', z: 44, order: 1 }, top: { label: 'Tops', z: 54, order: 2 }, outer: { label: 'Jackets', z: 62, order: 3 }, neck: { label: 'Neck', z: 46, order: 4 }, head: { label: 'Head', z: 46, order: 5 } };
   var TABS = ['top', 'outer', 'legs', 'head', 'neck'];
   var G = {
-    'polo-hi-vis-orange':       { slot: 'top', c: '#F26A1B',   w: 204, h: 272, y: 136 },
+    'polo-hi-vis-orange':       { slot: 'top', c: '#F26A1B',   w: 212, h: 278, y: 128 },
     'long-sleeve-hi-vis-orange':{ slot: 'top', c: '#F26A1B',   w: 262, h: 326, y: 132 },
     'quarter-zip-hi-vis-orange':{ slot: 'top', c: '#F26A1B',   w: 262, h: 326, y: 130 },
     'hi-vis-vest':              { slot: 'top', c: '#F26A1B',   w: 178, h: 296, y: 134 },
@@ -76,39 +76,31 @@ document.addEventListener('sitespec:ready', function () {
 
   // ---- 3D figure ----
   var fig = $('#fig');
-  // Each piece is a stack of thin slices. The front slice is the photo; slices behind it get darker and slightly narrower,
-  // so the piece looks rounded and solid when you spin it.
-  // Each piece is a stack of thin slices (front slice = the photo, slices behind it darker) plus one cross-plane that
-  // fills in the side silhouette, so it looks solid from the side as well as the front.
-  function loft(src, zMax, n, w, h, left, top, extra) {
+  // The figure is a thick cut-out: each piece is its photo on the front, a darker copy on the back,
+  // and a few thin slices between so it has an edge when it turns.
+  function slices(src, w, h, left, top, z0, z1, n, b0, b1) {
     var out = '';
     for (var i = 0; i < n; i++) {
-      var z = -zMax + (2 * zMax * i) / (n - 1), br = 0.5 + 0.5 * ((z + zMax) / (2 * zMax));
-      out += '<img src="' + src + '" alt="" draggable="false" style="width:' + w + 'px;height:' + h + 'px;left:' + left + 'px;top:' + top + 'px;transform:translateZ(' + z.toFixed(1) + 'px);filter:brightness(' + br.toFixed(2) + ')">';
+      var t = n === 1 ? 1 : i / (n - 1);
+      out += '<img src="' + src + '" alt="" draggable="false" style="width:' + w + 'px;height:' + h + 'px;left:' + left + 'px;top:' + top + 'px;transform:translateZ(' + (z0 + (z1 - z0) * t).toFixed(1) + 'px);filter:brightness(' + (b0 + (b1 - b0) * t).toFixed(2) + ')">';
     }
     return out;
   }
-  function sidePlane(src, depth, w, h, left, top, colour) {
-    return '<div class="sp" style="width:' + depth + 'px;height:' + h + 'px;left:' + (left + w / 2 - depth / 2) + 'px;top:' + top + 'px;background:' + colour + ';-webkit-mask:url(' + src + ') center/100% 100% no-repeat;mask:url(' + src + ') center/100% 100% no-repeat;transform:rotateY(90deg)"></div>';
+  function backFace(src, w, h, left, top, z, br) {
+    return '<img class="gb" src="' + src + '" alt="" draggable="false" style="width:' + w + 'px;height:' + h + 'px;left:' + left + 'px;top:' + top + 'px;transform:translateZ(' + z + 'px) rotateY(180deg);filter:brightness(' + br + ')">';
   }
-  fig.innerHTML = '<div class="mq-wrap" id="mq"><div class="mq-legs">' + loft('img/build/mannequin-legs.svg', 38, 11, 400, 860, 0, 0) + '</div>' + loft('img/build/mannequin.svg', 38, 11, 400, 860, 0, 0) + '<img class="sp" src="img/build/mannequin-side.svg" alt="" draggable="false" style="width:80px;height:860px;left:160px;top:0;transform:rotateY(90deg)">' + '</div><div id="gar"></div>';
+  fig.innerHTML = '<div class="mq-wrap" id="mq"><div class="mq-legs">' + slices('img/build/mannequin-legs.svg', 400, 860, 0, 0, -5, 6, 5, 0.6, 1) + backFace('img/build/mannequin-legs.svg', 400, 860, 0, 0, -6, 0.6) + '</div>' + slices('img/build/mannequin.svg', 400, 860, 0, 0, -5, 6, 5, 0.6, 1) + backFace('img/build/mannequin.svg', 400, 860, 0, 0, -6, 0.6) + '</div><div id="gar"></div>';
   var gar = $('#gar');
 
   function drawGarments() {
     var html = '';
     Object.keys(worn).forEach(function (slot) {
-      var p = S.find(worn[slot]), g = G[p.slug], z = SLOTS[slot].z;
+      var p = S.find(worn[slot]), g = G[p.slug], z = 8 + SLOTS[slot].order * 2;
       var file = BUILD + 'sitespec-' + (S.img(p).split('sitespec-')[1] || '');
-      var left = 200 - g.w / 2, sz = 'width:' + g.w + 'px;height:' + g.h + 'px;left:' + left + 'px;top:' + g.y + 'px;';
-      var body = '';
-      for (var i = 0; i < 6; i++) {
-        var zz = -z + (2 * z * i) / 6, br = 0.45 + 0.35 * ((zz + z) / (2 * z));
-        body += '<img src="' + file + '" alt="" draggable="false" style="' + sz + 'transform:translateZ(' + zz.toFixed(1) + 'px);filter:brightness(' + br.toFixed(2) + ')">';
-      }
-      html += '<div class="gw">' + body +
-        sidePlane(file, z * 2, g.w, g.h, left, g.y, 'linear-gradient(90deg,' + g.c + ',' + g.c + ')') +
-        '<img class="gb" src="' + file + '" alt="" draggable="false" style="' + sz + 'transform:translateZ(' + (-z) + 'px) rotateY(180deg);filter:brightness(.5)">' +
-        '<img class="gf" src="' + file + '" alt="" draggable="false" style="' + sz + 'transform:translateZ(' + z + 'px);"></div>';
+      var left = 200 - g.w / 2;
+      html += '<div class="gw">' +
+        backFace(file, g.w, g.h, left, g.y, -z, 0.55) +
+        slices(file, g.w, g.h, left, g.y, z - 9, z, 4, 0.5, 1) + '</div>';
     });
     gar.innerHTML = html;
     $('#mq').classList.toggle('legs-on', !!worn.legs);
@@ -117,7 +109,7 @@ document.addEventListener('sitespec:ready', function () {
   // ---- stage scaling ----
   var box = $('#box'), stage = $('#stage');
   function fit() {
-    var w = box.clientWidth, h = box.clientHeight, s = Math.min(w / 400, h / 900) * 0.97;
+    var w = box.clientWidth, h = box.clientHeight, s = Math.min(w / 400, h / 870) * 0.96;
     stage.style.transform = 'translate(-50%,-50%) scale(' + s.toFixed(4) + ')';
   }
   window.addEventListener('resize', fit); fit();
