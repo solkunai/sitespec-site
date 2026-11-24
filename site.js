@@ -196,7 +196,7 @@
       '<button class="icon-btn menu-btn show" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mpanel">' + ICON.menu + '</button>' +
       '<a class="logo" href="index.html" aria-label="SITESPEC home"><img src="img/sitespec-logo-horizontal.png" alt="SITESPEC technical workwear, headliners and PPE liners"></a>' +
       '<nav class="nav" id="mainNav" aria-label="Main">' +
-      nl('Shop all', 'shop.html', 'all') + '<a href="build.html" class="nav-build">Build your kit</a><a href="our-story.html">Our story</a><a href="team.html">Meet the team</a><a href="contact.html">Contact us</a><a href="newsletter.html">Newsletter</a><a href="faq.html">FAQ</a></nav>' +
+      nl('Shop all', 'shop.html', 'all') + '<a href="build.html" class="nav-build">Build your kit</a><a href="our-story.html">Our story</a><a href="team.html">Meet the team</a><a href="contact.html">Contact us</a><a href="faq.html">FAQ</a></nav>' +
       '<div class="hdr-actions">' + searchForm('d') +
       '<button class="icon-btn search-btn" id="searchBtn" aria-label="Search" aria-expanded="false">' + ICON.search + '</button>' +
       '<button class="icon-btn show" id="cartBtn" aria-label="Open cart">' + ICON.cart + '<span class="badge" id="badge" hidden>0</span></button>' +
