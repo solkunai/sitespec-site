@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact | SITESPEC</title>
+<link rel="icon" href="img/favicon.png">
+<link rel="canonical" href="https://sitespecworkwear.com/contact.html">
+<meta name="description" content="Questions about sizing, an order or kitting out a team? Send SITESPEC a message.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SITESPEC"><meta property="og:title" content="Contact | SITESPEC"><meta property="og:description" content="Questions about sizing, an order or kitting out a team? Send SITESPEC a message."><meta property="og:url" content="https://sitespecworkwear.com/contact.html"><meta property="og:image" content="https://sitespecworkwear.com/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.contact{display:flex;flex-wrap:wrap;gap:48px;padding:56px var(--pad) 72px}
+.contact .side{flex:1 1 280px;display:flex;flex-direction:column;gap:16px;font-size:17px;line-height:1.55;color:var(--text2)}
+.contact form{flex:2 1 460px;display:flex;flex-direction:column;gap:18px;max-width:720px}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-weight:600;font-size:15px}
+.f input,.f select,.f textarea{font:inherit;font-size:17px;padding:12px 14px;border:2px solid #C9CED6;border-radius:6px;background:#fff;color:var(--navy);width:100%}
+.f textarea{min-height:160px;resize:vertical}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--navy);outline:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.status{padding:14px 16px;border-radius:6px;font-weight:600;display:none}
+.status.ok{display:block;background:#E8F5EC;color:#14532D}
+.status.err{display:block;background:#FDECEA;color:#B42318}
+@media (max-width:760px){.row2{grid-template-columns:1fr}.contact{gap:28px;padding-top:32px}}
+</style>
+</head><body>
+<a class="skip" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<div class="page-head"><h1>Contact us</h1></div>
+<main id="main"><section class="contact">
+<div class="side">
+<p style="margin:0">Questions about sizing, an order, or kitting out a team? Send us a message and we'll get back to you.</p>
+<p style="margin:0">Instagram: <a href="https://www.instagram.com/sitespecworkwear/" target="_blank" rel="noopener" style="text-decoration:underline">@sitespecworkwear</a></p>
+<p style="margin:0;color:var(--muted)">[Business email and response time go here.]</p>
+</div>
+<form id="cf" novalidate>
+<div class="f"><label for="kind">What's it about?</label>
+<select id="kind" name="kind"><option value="general">General question</option><option value="order_enquiry">An existing order</option><option value="trade">Bulk &amp; business orders</option></select></div>
+<div class="row2">
+<div class="f"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required maxlength="200"></div>
+<div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="320"></div>
+</div>
+<div class="row2">
+<div class="f"><label for="phone">Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40"></div>
+<div class="f" id="orderRow" hidden><label for="order_ref">Order number</label><input id="order_ref" name="order_ref" maxlength="100"></div>
+<div class="f" id="companyRow" hidden><label for="company">Company</label><input id="company" name="company" autocomplete="organization" maxlength="200"></div>
+</div>
+<div class="f" id="qtyRow" hidden><label for="quantity">Quantity and sizes (roughly)</label><input id="quantity" name="quantity" maxlength="500" placeholder="e.g. 12 polos, mixed sizes"></div>
+<div class="f"><label for="message">Message</label><textarea id="message" name="message" required maxlength="5000"></textarea></div>
+<div class="hp" aria-hidden="true"><label>Leave this empty <input id="website" name="website" tabindex="-1" autocomplete="off"></label></div>
+<div class="status" id="status" role="status"></div>
+<button class="btn" type="submit" id="send" style="align-self:flex-start">Send message</button>
+</form>
+</section></main>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+document.addEventListener('sitespec:ready',function(){
+var S=window.SITESPEC,$=function(i){return document.getElementById(i)},st=$('status');
+function show(t,cls){st.textContent=t;st.className='status '+cls}
+$('kind').onchange=function(){$('orderRow').hidden=this.value!=='order_enquiry';$('companyRow').hidden=$('qtyRow').hidden=this.value!=='trade'};
+$('cf').onsubmit=function(e){
+ e.preventDefault();
+ if($('website').value){show('Thanks, your message has been sent.','ok');return} // honeypot: bots fill this in
+ var name=$('name').value.trim(),email=$('email').value.trim(),msg=$('message').value.trim();
+ if(!name||!/^\S+@\S+\.\S+$/.test(email)||!msg){show('Please add your name, a valid email and a message.','err');return}
+ var btn=$('send');btn.disabled=true;btn.textContent='Sending…';
+ var row={kind:$('kind').value,name:name,email:email,phone:$('phone').value.trim()||null,order_ref:$('kind').value==='order_enquiry'?($('order_ref').value.trim()||null):null,message:msg};
+ if($('kind').value==='trade'){var co=$('company').value.trim(),qy=$('quantity').value.trim();if(co)row.company=co;if(qy)row.quantity=qy}
+ S.supabaseInsert('contact_messages',row)
+ .then(function(r){
+  btn.disabled=false;btn.textContent='Send message';
+  if(r.ok){show('Thanks, your message has been sent. We\'ll be in touch soon.','ok');$('cf').reset();$('orderRow').hidden=$('companyRow').hidden=$('qtyRow').hidden=true}
+  else if(r.notConfigured){show('The contact form isn\'t connected yet. Please message us on Instagram @sitespecworkwear.','err')}
+  else{show('Sorry, something went wrong sending that. Please try again or message us on Instagram.','err')}
+ });
+};
+});
+</script>
+</body></html>

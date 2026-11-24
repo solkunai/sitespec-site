@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admins/
+Disallow: /checkout.html
+Disallow: /order-complete.html
+
+Sitemap: https://sitespecworkwear.com/sitemap.xml

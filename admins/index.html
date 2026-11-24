@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>SITESPEC Admin</title>
+<link rel="icon" href="../img/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../site.css">
+<style>
+body{background:var(--grey)}
+.top{background:var(--navy);color:#fff;display:flex;align-items:center;gap:16px;padding:12px 24px;flex-wrap:wrap}
+.top img{height:34px}.top .sp{flex:1}.top small{color:#C9D0DA}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;color:#C9D0DA;font:700 17px 'Barlow Condensed',sans-serif;letter-spacing:.05em;text-transform:uppercase;padding:10px 14px;border-radius:6px}
+.tabs button.on{background:var(--orange);color:var(--navy)}
+.tabs .cnt{background:#fff;color:var(--navy);border-radius:10px;padding:0 7px;font-size:12px;margin-left:6px}
+main{padding:24px;max-width:1400px;margin:0 auto}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.stat b{display:block;font:800 40px 'Barlow Condensed',sans-serif}.stat span{color:var(--muted);font-size:14px}
+.split{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+.list{display:flex;flex-direction:column;gap:8px;max-height:75vh;overflow:auto}
+.item{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;text-align:left;cursor:pointer;font:inherit;color:inherit;width:100%}
+.item.on{border:2px solid var(--orange)}
+.item .t{display:flex;justify-content:space-between;gap:8px;font-weight:600}.item .s{color:var(--muted);font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700;background:#E3E6EA}
+.pill.new{background:var(--orange);color:var(--navy)}.pill.replied,.pill.paid,.pill.fulfilled{background:#D7F0DF;color:#14532D}.pill.spam,.pill.cancelled,.pill.refunded{background:#FDECEA;color:#B42318}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filters button,.sm{border:1px solid #C9CED6;background:#fff;border-radius:999px;padding:6px 12px;font:600 13px 'Barlow',sans-serif;color:var(--navy)}
+.filters button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.sm{border-radius:6px;padding:8px 14px;font-size:14px}.sm.pri{background:var(--navy);color:#fff;border-color:var(--navy)}.sm.dng{color:#B42318;border-color:#E8B4AE}
+.sm:disabled{opacity:.5}
+.msgbox{white-space:pre-wrap;border-left:4px solid var(--orange);background:var(--grey);padding:12px 14px;border-radius:0 6px 6px 0;line-height:1.5}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;font-size:15px;margin:12px 0}.kv span{color:var(--muted)}
+textarea,input,select{font:inherit;font-size:15px;padding:9px 11px;border:1px solid #C9CED6;border-radius:6px;width:100%;background:#fff;color:var(--navy)}
+textarea{min-height:110px;resize:vertical}
+label.l{display:block;font-weight:600;font-size:13px;margin:12px 0 4px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-weight:600}
+tr.click{cursor:pointer}tr.click:hover{background:#FAFBFC}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.toast2{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:8px;z-index:50;display:none;max-width:90vw}
+.toast2.err{background:#B42318}
+.login{max-width:380px;margin:12vh auto;padding:0 16px}
+.login h1{font:800 34px 'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:16px}
+.hist{margin-top:14px;font-size:14px}.hist div{border-top:1px solid var(--line);padding:8px 0;white-space:pre-wrap}
+.err-t{color:#B42318;font-weight:600;font-size:14px;min-height:20px;margin-top:8px}
+[hidden]{display:none!important}
+@media (max-width:900px){.split{grid-template-columns:1fr}.list{max-height:none}.grid2{grid-template-columns:1fr}main{padding:14px}}
+</style></head><body>
+
+<div class="login" id="loginView" hidden>
+<a href="../" title="Go to the shop" style="display:inline-block"><img src="../img/sitespec-logo-horizontal.png" alt="SITESPEC" style="height:46px;margin-bottom:24px;display:block"></a>
+<div class="card"><h1>Admin sign in</h1>
+<form id="loginForm"><label class="l" for="em">Email</label><input id="em" type="email" autocomplete="username" required>
+<label class="l" for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" required>
+<div class="err-t" id="loginErr" role="alert"></div>
+<button class="btn" style="width:100%;margin-top:8px" type="submit">Sign in</button></form></div></div>
+
+<div id="app" hidden>
+<div class="top"><a href="../" title="Go to the shop" aria-label="SITESPEC shop" style="display:flex"><img src="../img/sitespec-logo-horizontal-white-transparent.png" alt="SITESPEC"></a><small>Admin</small>
+<nav class="tabs" id="tabs"></nav><span class="sp"></span><small id="who"></small><button class="sm" id="out">Sign out</button></div>
+<main id="view"></main></div>
+<div class="toast2" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+var URL_='https://tlopsgfqsbctoqaanlti.supabase.co',KEY='sb_publishable_VBlNHYWQKmuJhJBe5bgshg_-ql7smz9';
+var sb=supabase.createClient(URL_,KEY),$=function(i){return document.getElementById(i)};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var money=function(p){return p==null?'TBC':'£'+(p/100).toFixed(2)};
+var when=function(d){return new Date(d).toLocaleString('en-GB',{timeZone:'Europe/London',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};
+var KINDS={general:'General question',order_enquiry:'Order enquiry',trade:'Bulk & business'};
+var state={tab:'overview',msgFilter:'new',msgSel:null,ordSel:null,prodSel:null,session:null,newCount:0};
+var cache={};
+
+function toast(t,err){var e=$('toast');e.textContent=t;e.className='toast2'+(err?' err':'');e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none'},3200)}
+function must(r){if(r.error){toast(r.error.message,true);throw r.error}return r}
+
+/* ---------- auth ---------- */
+async function boot(){
+ var s=(await sb.auth.getSession()).data.session;
+ if(!s){show('login');return}
+ var a=await sb.from('admins').select('user_id').eq('user_id',s.user.id);
+ if(a.error||!a.data||a.data.length!==1){await sb.auth.signOut();show('login');$('loginErr').textContent='This account is not set up as an admin.';return}
+ state.session=s;$('who').textContent=s.user.email;show('app');go(state.tab)
+}
+function show(v){$('loginView').hidden=v!=='login';$('app').hidden=v!=='app'}
+$('loginForm').onsubmit=async function(e){e.preventDefault();$('loginErr').textContent='';
+ var r=await sb.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+ if(r.error){$('loginErr').textContent='Wrong email or password.';return}
+ $('pw').value='';boot()};
+$('out').onclick=async function(){await sb.auth.signOut();state.session=null;show('login')};
+
+/* ---------- tabs ---------- */
+var TABS=[['overview','Overview'],['messages','Messages'],['subscribers','Subscribers'],['orders','Orders'],['products','Products']];
+function drawTabs(){$('tabs').innerHTML=TABS.map(function(t){return '<button class="'+(state.tab===t[0]?'on':'')+'" data-t="'+t[0]+'">'+t[1]+(t[0]==='messages'&&state.newCount?'<span class="cnt">'+state.newCount+'</span>':'')+'</button>'}).join('')}
+$('tabs').onclick=function(e){var t=e.target.closest('[data-t]');if(t)go(t.dataset.t)};
+async function go(t){state.tab=t;drawTabs();$('view').innerHTML='<div class="card">Loading…</div>';
+ try{await({overview:vOverview,messages:vMessages,subscribers:vSubs,orders:vOrders,products:vProducts}[t])()}catch(e){console.error(e)}
+ refreshCount()}
+async function refreshCount(){var r=await sb.from('contact_messages').select('id',{count:'exact',head:true}).eq('status','new');if(!r.error){state.newCount=r.count||0;drawTabs()}}
+
+/* ---------- overview ---------- */
+async function cnt(table,f){var q=sb.from(table).select('id',{count:'exact',head:true});if(f)q=f(q);var r=await q;return r.error?'?':r.count}
+async function vOverview(){
+ var v=await Promise.all([cnt('contact_messages',function(q){return q.eq('status','new')}),cnt('contact_messages'),cnt('newsletter_subscribers'),cnt('orders'),cnt('orders',function(q){return q.eq('status','paid')}),cnt('products')]);
+ var rev=await sb.from('orders').select('total_pence').in('status',['paid','fulfilled']);
+ var total=(rev.data||[]).reduce(function(n,o){return n+o.total_pence},0);
+ var S=[['New messages',v[0]],['All messages',v[1]],['Newsletter subscribers',v[2]],['Orders',v[3]],['Orders to ship',v[4]],['Revenue',money(total)],['Products',v[5]]];
+ $('view').innerHTML='<div class="stats">'+S.map(function(s){return '<div class="card stat"><b>'+esc(s[1])+'</b><span>'+s[0]+'</span></div>'}).join('')+'</div>'+
+ '<div class="card" style="margin-top:16px"><b>Website visitors</b><p style="margin:6px 0 0;color:var(--muted)">Visitor analytics will come from Cloudflare Web Analytics once the site is live on Cloudflare (free, no cookies). Sales figures above are live from your orders.</p></div>'}
+
+/* ---------- messages ---------- */
+async function vMessages(){
+ var q=sb.from('contact_messages').select('*').order('created_at',{ascending:false}).limit(200);
+ if(state.msgFilter!=='all')q=q.eq('status',state.msgFilter);
+ var r=must(await q);var rows=r.data||[];cache.msgs=rows;
+ if(state.msgSel&&!rows.some(function(m){return m.id===state.msgSel}))state.msgSel=null;
+ var F=['new','read','replied','spam','all'];
+ $('view').innerHTML='<div class="filters">'+F.map(function(f){return '<button data-f="'+f+'" class="'+(state.msgFilter===f?'on':'')+'">'+f[0].toUpperCase()+f.slice(1)+'</button>'}).join('')+'</div>'+
+ '<div class="split"><div class="list">'+(rows.length?rows.map(function(m){return '<button class="item'+(m.id===state.msgSel?' on':'')+'" data-m="'+m.id+'"><div class="t"><span>'+esc(m.name)+'</span><span class="pill '+m.status+'">'+m.status+'</span></div><div class="s">'+esc(KINDS[m.kind]||m.kind)+' · '+when(m.created_at)+'</div><div class="s">'+esc(m.message)+'</div></button>'}).join(''):'<div class="card">Nothing here.</div>')+'</div><div id="detail"></div></div>';
+ $('view').querySelector('.filters').onclick=function(e){var b=e.target.closest('[data-f]');if(b){state.msgFilter=b.dataset.f;state.msgSel=null;vMessages()}};
+ $('view').querySelector('.list').onclick=function(e){var b=e.target.closest('[data-m]');if(b){state.msgSel=b.dataset.m;openMsg()}};
+ if(state.msgSel)openMsg();else $('detail').innerHTML='<div class="card" style="color:var(--muted)">Select a message.</div>'}
+async function openMsg(){
+ var m=cache.msgs.filter(function(x){return x.id===state.msgSel})[0];if(!m)return;
+ document.querySelectorAll('.item').forEach(function(i){i.classList.toggle('on',i.dataset.m===m.id)});
+ if(m.status==='new'){await sb.from('contact_messages').update({status:'read'}).eq('id',m.id);m.status='read';refreshCount()}
+ var h=await sb.from('message_replies').select('*').eq('message_id',m.id).order('created_at');
+ var d=$('detail');
+ d.innerHTML='<div class="card"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 class="cond" style="font-size:26px;font-weight:800">'+esc(KINDS[m.kind]||m.kind)+'</h2><span class="pill '+m.status+'">'+m.status+'</span></div>'+
+ '<div class="kv"><span>Name</span><b>'+esc(m.name)+'</b><span>Email</span><b><a href="mailto:'+esc(m.email)+'">'+esc(m.email)+'</a></b>'+(m.phone?'<span>Phone</span><b>'+esc(m.phone)+'</b>':'')+(m.order_ref?'<span>Order</span><b>'+esc(m.order_ref)+'</b>':'')+(m.company?'<span>Company</span><b>'+esc(m.company)+'</b>':'')+(m.quantity?'<span>Quantity</span><b>'+esc(m.quantity)+'</b>':'')+'<span>Received</span><b>'+when(m.created_at)+'</b></div>'+
+ '<div class="msgbox">'+esc(m.message)+'</div>'+
+ ((h.data||[]).length?'<div class="hist"><b>Replies sent</b>'+h.data.map(function(r){return '<div><small style="color:var(--muted)">'+when(r.created_at)+' · '+esc(r.sent_by||'')+'</small><br>'+esc(r.body)+'</div>'}).join('')+'</div>':'')+
+ '<label class="l" for="rb">Reply to '+esc(m.name)+' (sent by email from the site)</label><textarea id="rb" placeholder="Write your reply…"></textarea>'+
+ '<div class="row"><input id="sn" style="max-width:240px" placeholder="Your name (sign-off)" value="'+esc(localStorage.getItem('sn')||'')+'"><button class="sm pri" id="send">Send reply</button></div>'+
+ '<label class="l" for="nt">Internal note (only you see this)</label><textarea id="nt" style="min-height:70px">'+esc(m.internal_note||'')+'</textarea>'+
+ '<div class="row"><button class="sm" id="svn">Save note</button><span style="flex:1"></span>'+['read','replied','spam'].filter(function(s){return s!==m.status}).map(function(s){return '<button class="sm" data-st="'+s+'">Mark '+s+'</button>'}).join('')+'</div></div>';
+ $('svn').onclick=async function(){must(await sb.from('contact_messages').update({internal_note:$('nt').value||null}).eq('id',m.id));m.internal_note=$('nt').value;toast('Note saved')};
+ d.querySelectorAll('[data-st]').forEach(function(b){b.onclick=async function(){must(await sb.from('contact_messages').update({status:b.dataset.st}).eq('id',m.id));state.msgSel=null;vMessages();refreshCount()}});
+ $('send').onclick=async function(){
+  var body=$('rb').value.trim();if(!body){toast('Write a reply first',true);return}
+  if(!confirm('Send this reply to '+m.email+'?'))return;
+  localStorage.setItem('sn',$('sn').value);var b=$('send');b.disabled=true;b.textContent='Sending…';
+  var s=(await sb.auth.getSession()).data.session;
+  var r=await fetch(URL_+'/functions/v1/send-reply',{method:'POST',headers:{'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+s.access_token},body:JSON.stringify({message_id:m.id,body:body,sender_name:$('sn').value})});
+  var j=await r.json().catch(function(){return{}});
+  if(r.ok&&j.ok){toast('Reply sent');vMessages()}else{toast(j.error||'Could not send',true);b.disabled=false;b.textContent='Send reply'}}}
+
+/* ---------- subscribers ---------- */
+async function vSubs(){
+ var r=must(await sb.from('newsletter_subscribers').select('*').order('created_at',{ascending:false}));var rows=r.data||[];
+ $('view').innerHTML='<div class="card"><div class="row" style="margin:0 0 12px"><b>'+rows.length+' subscribers</b><span style="flex:1"></span><input id="ss" placeholder="Search…" style="max-width:220px"><button class="sm pri" id="csv">Export CSV</button></div>'+
+ '<table><thead><tr><th>Email</th><th>Joined</th><th></th></tr></thead><tbody id="sb"></tbody></table></div>';
+ function draw(){var t=$('ss').value.toLowerCase();$('sb').innerHTML=rows.filter(function(x){return x.email.toLowerCase().indexOf(t)>-1}).map(function(x){return '<tr><td>'+esc(x.email)+'</td><td>'+when(x.created_at)+'</td><td><button class="sm dng" data-d="'+x.id+'">Remove</button></td></tr>'}).join('')||'<tr><td colspan="3">None yet.</td></tr>'}
+ draw();$('ss').oninput=draw;
+ $('sb').onclick=async function(e){var b=e.target.closest('[data-d]');if(!b||!confirm('Remove this subscriber?'))return;must(await sb.from('newsletter_subscribers').delete().eq('id',b.dataset.d));vSubs()};
+ $('csv').onclick=function(){var c='email,joined\n'+rows.map(function(x){return '"'+x.email.replace(/"/g,'""')+'",'+x.created_at}).join('\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download='sitespec-subscribers.csv';a.click()}}
+
+/* ---------- orders ---------- */
+async function vOrders(){
+ var r=must(await sb.from('orders').select('*').order('created_at',{ascending:false}).limit(200));var rows=r.data||[];cache.orders=rows;
+ $('view').innerHTML='<div class="split"><div class="list">'+(rows.length?rows.map(function(o){return '<button class="item'+(o.id===state.ordSel?' on':'')+'" data-o="'+o.id+'"><div class="t"><span>'+esc(o.name||o.email||'Order')+'</span><span class="pill '+o.status+'">'+o.status+'</span></div><div class="s">'+money(o.total_pence)+' · '+when(o.created_at)+'</div></button>'}).join(''):'<div class="card">No orders yet. They will appear here once checkout is connected.</div>')+'</div><div id="detail"><div class="card" style="color:var(--muted)">Select an order.</div></div></div>';
+ $('view').querySelector('.list').onclick=function(e){var b=e.target.closest('[data-o]');if(b){state.ordSel=b.dataset.o;openOrder()}};
+ if(state.ordSel)openOrder()}
+async function openOrder(){
+ var o=cache.orders.filter(function(x){return x.id===state.ordSel})[0];if(!o)return;
+ document.querySelectorAll('.item').forEach(function(i){i.classList.toggle('on',i.dataset.o===o.id)});
+ var it=must(await sb.from('order_items').select('*').eq('order_id',o.id)).data||[];var a=o.shipping_address||{};
+ var addr=[a.name,a.line1||a.street_line_1,a.line2||a.street_line_2,a.city,a.postal_code||a.postcode,a.country||a.country_code].filter(Boolean).map(esc).join('<br>');
+ $('detail').innerHTML='<div class="card"><h2 class="cond" style="font-size:26px;font-weight:800">Order '+esc(o.id.slice(0,8))+'</h2>'+
+ '<div class="kv"><span>Customer</span><b>'+esc(o.name||'')+'</b><span>Email</span><b>'+esc(o.email||'')+'</b>'+(o.phone?'<span>Phone</span><b>'+esc(o.phone)+'</b>':'')+'<span>Placed</span><b>'+when(o.created_at)+'</b><span>Payment</span><b>'+esc(o.payment_provider)+' · '+esc(o.provider_ref||'')+'</b><span>Ship to</span><b>'+(addr||'—')+'</b></div>'+
+ '<table><thead><tr><th>Item</th><th>Size</th><th>Qty</th><th>Price</th></tr></thead><tbody>'+it.map(function(i){return '<tr><td>'+esc(i.name)+(i.colour?' · '+esc(i.colour):'')+'</td><td>'+esc(i.size||'')+'</td><td>'+i.quantity+'</td><td>'+money(i.unit_price_pence*i.quantity)+'</td></tr>'}).join('')+'<tr><td colspan="3" style="text-align:right">Delivery</td><td>'+money(o.shipping_pence)+'</td></tr><tr><td colspan="3" style="text-align:right"><b>Total</b></td><td><b>'+money(o.total_pence)+'</b></td></tr></tbody></table>'+
+ '<div class="grid2"><div><label class="l" for="os">Status</label><select id="os">'+['pending','paid','fulfilled','cancelled','refunded'].map(function(s){return '<option'+(s===o.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select></div><div><label class="l" for="ot">Tracking number</label><input id="ot" value="'+esc(o.tracking_number||'')+'"></div></div>'+
+ '<label class="l" for="on">Notes</label><textarea id="on" style="min-height:70px">'+esc(o.notes||'')+'</textarea><div class="row"><button class="sm pri" id="so">Save order</button></div>'+
+ '<p style="color:var(--muted);font-size:13px">Refunds are done in your payment provider (Stripe/Revolut), then mark the order refunded here.</p></div>';
+ $('so').onclick=async function(){must(await sb.from('orders').update({status:$('os').value,tracking_number:$('ot').value||null,notes:$('on').value||null,updated_at:new Date().toISOString()}).eq('id',o.id));toast('Order saved');vOrders()}}
+
+/* ---------- products ---------- */
+async function vProducts(){
+ var r=must(await sb.from('products').select('*').order('sort').order('name'));var rows=r.data||[];cache.prods=rows;
+ $('view').innerHTML='<div class="row" style="margin:0 0 12px"><b>'+rows.length+' products</b><span style="flex:1"></span><button class="sm pri" id="np">+ New product</button></div><div class="split"><div class="list">'+rows.map(function(p){return '<button class="item'+(p.slug===state.prodSel?' on':'')+'" data-p="'+esc(p.slug)+'"><div class="t"><span>'+esc(p.name)+'</span><span>'+money(p.price_pence)+'</span></div><div class="s">'+esc(p.cat)+(p.active?'':' · HIDDEN')+'</div></button>'}).join('')+'</div><div id="detail"><div class="card" style="color:var(--muted)">Select a product.</div></div></div>';
+ $('view').querySelector('.list').onclick=function(e){var b=e.target.closest('[data-p]');if(b){state.prodSel=b.dataset.p;editProd(cache.prods.filter(function(p){return p.slug===b.dataset.p})[0])}};
+ $('np').onclick=function(){state.prodSel=null;editProd(null)};
+ if(state.prodSel)editProd(cache.prods.filter(function(p){return p.slug===state.prodSel})[0])}
+function stockStr(s){return s?Object.keys(s).map(function(k){return k+':'+s[k]}).join(', '):''}
+function editProd(p){
+ var isNew=!p;p=p||{slug:'',name:'',cat:'tops',price_pence:null,sizes:['S','M','L','XL','2XL','3XL'],images:[],description:'',features:'',active:true,sort:100};
+ document.querySelectorAll('.item').forEach(function(i){i.classList.toggle('on',i.dataset.p===p.slug)});
+ $('detail').innerHTML='<div class="card"><h2 class="cond" style="font-size:26px;font-weight:800">'+(isNew?'New product':esc(p.name))+'</h2>'+
+ '<div class="grid2"><div><label class="l" for="pslug">URL name (letters, numbers, dashes)</label><input id="pslug" value="'+esc(p.slug)+'"'+(isNew?'':' disabled')+'></div><div><label class="l" for="pname">Name</label><input id="pname" value="'+esc(p.name)+'"></div>'+
+ '<div><label class="l" for="pcat">Category</label><select id="pcat">'+['liners','jackets','tops','joggers','reflective','hats'].map(function(c){return '<option'+(c===p.cat?' selected':'')+'>'+c+'</option>'}).join('')+'</select></div>'+
+ '<div><label class="l" for="pprice">Price in £ (blank = "coming soon", cannot be bought)</label><input id="pprice" inputmode="decimal" value="'+(p.price_pence==null?'':(p.price_pence/100).toFixed(2))+'"></div>'+
+ '<div><label class="l" for="psizes">Sizes (comma separated)</label><input id="psizes" value="'+esc((p.sizes||[]).join(', '))+'"></div>'+
+ '<div><label class="l" for="pstock">Stock per size, e.g. S:5, M:10 (blank = not tracked)</label><input id="pstock" value="'+esc(stockStr(p.stock))+'"></div>'+
+ '<div><label class="l" for="pcol">Colour name (optional)</label><input id="pcol" value="'+esc(p.colour||'')+'"></div><div><label class="l" for="phex">Colour hex, e.g. #F96A1B</label><input id="phex" value="'+esc(p.hex||'')+'"></div>'+
+ '<div><label class="l" for="pgrp">Colour group (products sharing this show swatches)</label><input id="pgrp" value="'+esc(p.group_key||'')+'"></div><div><label class="l" for="pimg">Image file names in /img (comma separated)</label><input id="pimg" value="'+esc((p.images||[]).join(', '))+'"></div></div>'+
+ '<label class="l" for="pdesc">Description</label><textarea id="pdesc">'+esc(p.description)+'</textarea><label class="l" for="pfeat">Features (one per line)</label><textarea id="pfeat">'+esc(p.features)+'</textarea>'+
+ '<div class="grid2"><div><label class="l" for="psort">Sort order (lower = first)</label><input id="psort" type="number" value="'+p.sort+'"></div><div><label class="l"><input type="checkbox" id="pact" style="width:auto"'+(p.active?' checked':'')+'> Visible in the shop</label></div></div>'+
+ '<div class="row"><button class="sm pri" id="sp">Save product</button></div></div>';
+ $('sp').onclick=async function(){
+  var slug=$('pslug').value.trim(),name=$('pname').value.trim(),pr=$('pprice').value.trim().replace('£','');
+  if(!/^[a-z0-9-]{2,60}$/.test(slug)){toast('URL name: lowercase letters, numbers and dashes only',true);return}
+  if(!name){toast('Name is required',true);return}
+  var price=pr===''?null:Math.round(parseFloat(pr)*100);if(price!==null&&(isNaN(price)||price<0)){toast('Price is not a number',true);return}
+  var sizes=$('psizes').value.split(',').map(function(s){return s.trim()}).filter(Boolean);if(!sizes.length){toast('Add at least one size (or "One size")',true);return}
+  var images=$('pimg').value.split(',').map(function(s){return s.trim()}).filter(Boolean);if(!images.length){toast('Add at least one image file name',true);return}
+  var stock=null,sv=$('pstock').value.trim();
+  if(sv){stock={};var bad=false;sv.split(',').forEach(function(x){var kv=x.split(':');var n=parseInt(kv[1],10);if(kv.length!==2||isNaN(n)||n<0)bad=true;else stock[kv[0].trim()]=n});if(bad){toast('Stock format is like S:5, M:10',true);return}}
+  var hex=$('phex').value.trim();if(hex&&!/^#[0-9a-fA-F]{6}$/.test(hex)){toast('Hex colour looks like #F96A1B',true);return}
+  var row={slug:slug,name:name,cat:$('pcat').value,price_pence:price,sizes:sizes,stock:stock,colour:$('pcol').value.trim()||null,hex:hex||null,group_key:$('pgrp').value.trim()||null,images:images,description:$('pdesc').value,features:$('pfeat').value,sort:parseInt($('psort').value,10)||100,active:$('pact').checked,updated_at:new Date().toISOString()};
+  must(await sb.from('products').upsert(row,{onConflict:'slug'}));state.prodSel=slug;toast('Product saved');vProducts()}}
+
+boot();
+})();
+</script></body></html>

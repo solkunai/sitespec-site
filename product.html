@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Product | SITESPEC</title>
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="description" content="SITESPEC technical workwear.">
+<meta property="og:site_name" content="SITESPEC"><meta property="og:image" content="https://sitespecworkwear.com/img/og-image.png"><meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head><body>
+<a class="skip" href="#pdp-root">Skip to content</a>
+<div id="site-header"></div>
+<main id="pdp-root"></main>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+document.addEventListener('sitespec:ready',function(){
+var S=window.SITESPEC,E=S.esc,root=document.getElementById('pdp-root');
+var p=S.find(new URLSearchParams(location.search).get('p'));
+if(!p){root.innerHTML='<section class="sec"><h1 class="h2">Product not found</h1><p style="font-size:18px">We couldn\'t find that product. <a href="shop.html" style="text-decoration:underline">Browse all gear</a>.</p></section>';return}
+document.title=p.name+' | SITESPEC';
+(function(){function m(sel,attr,val){var e=document.querySelector(sel);if(!e){e=document.createElement(sel.indexOf('link')===0?'link':'meta');var a=sel.match(/\[(\w+)="([^"]+)"\]/);e.setAttribute(a[1],a[2]);document.head.appendChild(e)}e.setAttribute(attr,val)}
+var u='https://sitespecworkwear.com/product.html?p='+encodeURIComponent(p.slug),img='https://sitespecworkwear.com/'+S.img(p),d=p.desc;
+m('meta[name="description"]','content',d);m('link[rel="canonical"]','href',u);m('meta[property="og:title"]','content',p.name+' | SITESPEC');m('meta[property="og:description"]','content',d);m('meta[property="og:url"]','content',u);m('meta[property="og:image"]','content',img);m('meta[property="og:type"]','content','product');
+var ld={'@context':'https://schema.org','@type':'Product',name:p.name,image:[img],description:d,brand:{'@type':'Brand',name:'SITESPEC'}};
+if(p.price!=null){var oos=p.stock&&p.sizes.every(function(z){return p.stock[z]!==undefined&&p.stock[z]<=0});ld.offers={'@type':'Offer',priceCurrency:'GBP',price:(p.price/100).toFixed(2),url:u,availability:oos?'https://schema.org/OutOfStock':'https://schema.org/InStock'}}
+var sc=document.createElement('script');sc.type='application/ld+json';sc.text=JSON.stringify(ld);document.head.appendChild(sc)})();
+
+var size=p.sizes.length>1?null:p.sizes[0],qty=1,img=0,open=0;
+var siblings=p.group?S.PRODUCTS.filter(function(x){return x.group===p.group}):[];
+var more=S.PRODUCTS.filter(function(x){return x.slug!==p.slug&&!(p.group&&x.group===p.group)}).sort(function(a,b){return (b.cat===p.cat)-(a.cat===p.cat)}).slice(0,4);
+var acc=[['Features',p.features],['Spec & care','[Fabric composition, weight and certification details go here.]\n[Care: wash at 30°C, do not tumble dry hot.]'],['Delivery & returns','[Delivery times and costs go here.]\n[Returns policy goes here.]']];
+
+function draw(){
+ var soldOut=function(z){return p.stock&&p.stock[z]!==undefined&&p.stock[z]<=0};
+ var allOut=p.sizes.every(soldOut);
+ var buyable=p.price!=null&&!allOut;
+ var thumbs=p.imgs.length>1?'<div class="thumbs">'+p.imgs.map(function(_,i){return '<button class="'+(i===img?'on':'')+'" data-img="'+i+'" aria-label="View image '+(i+1)+'"><img src="'+S.img(p,i)+'" alt=""></button>'}).join('')+'</div>':'';
+ var sw=siblings.length>1?'<div><div class="lbl">Colour: <span>'+E(p.colour)+'</span></div><div class="swatches">'+siblings.map(function(c){return '<a class="sw'+(c.slug===p.slug?' on':'')+'" href="'+S.href(c)+'" aria-label="'+E(c.colour)+'"'+(c.slug===p.slug?' aria-current="true"':'')+'><i style="background:'+c.hex+'"></i></a>'}).join('')+'</div></div>':'';
+ var sz=p.sizes.length>1?'<div><div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:10px"><span style="font-weight:600">Size: <span style="font-weight:400">'+(size||'Select a size')+'</span></span><a href="size-guide.html" style="text-decoration:underline">Size guide</a></div><div class="sizes" role="group" aria-label="Size">'+p.sizes.map(function(s){return '<button class="size'+(s===size?' on':'')+'" aria-pressed="'+(s===size)+'" data-size="'+s+'"'+(soldOut(s)?' disabled style="opacity:.4;text-decoration:line-through"':'')+'>'+s+'</button>'}).join('')+'</div></div>':'';
+ root.innerHTML=
+ '<div class="crumbs"><a href="index.html">Home</a> / <a href="shop.html?cat='+p.cat+'">'+E(S.CATS[p.cat])+'</a> / <b>'+E(p.name)+'</b></div>'+
+ '<section class="pdp"><div class="gal">'+thumbs+'<div class="mainimg"><img src="'+S.img(p,img)+'" alt="'+E(p.name)+'"></div></div>'+
+ '<div class="info"><div class="cat-l">'+E(S.CATS[p.cat])+'</div><h1>'+E(p.name)+'</h1>'+
+ '<div style="display:flex;align-items:center;gap:12px"><span class="stars" style="font-size:18px" aria-hidden="true">★★★★★</span><a href="#reviews" style="font-size:15px;text-decoration:underline">[N] reviews</a></div>'+
+ '<div class="price">'+(p.price!=null?S.money(p.price)+' <small>inc. VAT</small>':'<span style="font-size:22px;color:var(--muted)">Price coming soon</span>')+'</div>'+
+ '<p style="margin:0;font-size:17px;line-height:1.55;color:var(--text2)">'+E(p.desc)+'</p>'+sw+sz+
+ '<div class="buyrow"><div class="qty"><button aria-label="Decrease quantity" data-q="-1">−</button><span aria-live="polite">'+qty+'</span><button aria-label="Increase quantity" data-q="1">+</button></div>'+
+ '<button class="btn" id="addBtn"'+(buyable?'':' disabled')+'>'+(buyable?'Add to cart':(allOut?'Sold out':'Coming soon'))+'</button></div><p class="msg" id="msg" role="alert"></p>'+
+ '<div class="assure"><span>● In stock: ships in [X] days</span><span>● Secure checkout</span><span>● Free returns within [X] days</span></div>'+
+ '<div class="acc">'+acc.map(function(a,i){return '<div class="acc-i"><button aria-expanded="'+(open===i)+'" data-acc="'+i+'">'+a[0]+'<span style="font-size:24px">'+(open===i?'−':'+')+'</span></button>'+(open===i?'<div>'+E(a[1])+'</div>':'')+'</div>'}).join('')+'</div></div></section>'+
+ '<section class="reviews" id="reviews"><div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:16px;margin-bottom:28px"><h2 class="h2" style="font-size:40px">Reviews</h2><span class="note">Layout only: replace with real, verified customer reviews.</span></div>'+
+ '<div class="rev-wrap"><div class="rev-sum"><div class="big">[X.X]<small> / 5</small></div><div class="stars" style="font-size:20px" aria-hidden="true">★★★★★</div>'+
+ [5,4,3,2,1].map(function(n){return '<div class="bar"><span style="width:14px">'+n+'</span><i></i></div>'}).join('')+
+ '<div class="note">Fit: [true to size / runs small / runs large]</div></div>'+
+ '<div style="flex:1 1 560px;display:flex;flex-direction:column;gap:16px">'+[1,2,3].map(function(){return '<article class="rev"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:14px"><span class="stars" style="font-size:17px" aria-hidden="true">★★★★★</span><span>[Date]</span></div><h3>[Review headline]</h3><p>[Review text appears here once a customer has bought and reviewed the product.]</p><div class="note">[Customer name] · <b style="color:var(--navy)">Verified buyer</b></div></article>'}).join('')+'</div></div></section>'+
+ '<section class="sec"><h2 class="h2" style="font-size:40px;margin-bottom:28px">You may also like</h2><div class="grid4">'+more.map(S.card).join('')+'</div></section>';
+}
+draw();
+
+root.addEventListener('click',function(e){
+ var t=e.target.closest('[data-img],[data-size],[data-q],[data-acc],#addBtn');if(!t)return;
+ if(t.dataset.img!==undefined){img=+t.dataset.img;draw()}
+ else if(t.dataset.size!==undefined){size=t.dataset.size;draw()}
+ else if(t.dataset.q!==undefined){qty=Math.max(1,Math.min(99,qty+ +t.dataset.q));draw()}
+ else if(t.dataset.acc!==undefined){var i=+t.dataset.acc;open=open===i?-1:i;draw()}
+ else if(t.id==='addBtn'){
+  if(!size){document.getElementById('msg').textContent='Please select a size.';return}
+  if(S.addToCart(p.slug,size,qty))S.openCart();
+ }
+});
+});
+</script>
+</body></html>

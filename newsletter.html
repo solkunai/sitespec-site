@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Newsletter | SITESPEC</title>
+<meta name="description" content="Sign up for SITESPEC kit drops and winter offers. One email when new gear lands, no spam.">
+<link rel="canonical" href="https://sitespecworkwear.com/newsletter.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="SITESPEC"><meta property="og:title" content="Newsletter | SITESPEC"><meta property="og:description" content="Sign up for SITESPEC kit drops and winter offers. One email when new gear lands, no spam."><meta property="og:url" content="https://sitespecworkwear.com/newsletter.html"><meta property="og:image" content="https://sitespecworkwear.com/img/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/favicon.png"><link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head><body>
+<a class="skip" href="#main">Skip to content</a>
+<div id="site-header"></div>
+<main id="main">
+<section class="news">
+<div><h1 style="font:800 44px/1 'Barlow Condensed',sans-serif;text-transform:uppercase;margin:0">Get kit drops &amp; winter offers</h1><p style="margin:10px 0 0;font-size:18px">One email when new gear lands. No spam, and you can unsubscribe any time.</p></div>
+<form id="nlForm" novalidate>
+<label class="sr" for="nl">Email address</label>
+<input id="nl" type="email" placeholder="Your email" required maxlength="320">
+<button type="submit">Sign up</button>
+<p id="nlMsg" role="status" style="flex-basis:100%;margin:0;font-weight:600"></p>
+</form>
+</section>
+<div class="prose" style="padding-top:36px"><p>We use your email only to send SITESPEC news. See our <a href="privacy.html">Privacy notice</a>.</p></div>
+</main>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+document.addEventListener('sitespec:ready',function(){
+var S=window.SITESPEC,$=function(i){return document.getElementById(i)};
+$('nlForm').onsubmit=function(e){e.preventDefault();var em=$('nl').value.trim(),m=$('nlMsg');
+ if(!/^\S+@\S+\.\S+$/.test(em)){m.textContent='Please enter a valid email address.';return}
+ S.supabaseInsert('newsletter_subscribers',{email:em}).then(function(r){
+  if(r.ok||r.duplicate){m.textContent='Thanks, you\'re on the list.';$('nl').value=''}
+  else if(r.notConfigured){m.textContent='Sign-up isn\'t connected yet. Check back soon.'}
+  else{m.textContent='Sorry, something went wrong. Please try again.'}})};
+});
+</script>
+</body></html>
